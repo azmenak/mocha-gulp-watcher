@@ -17,7 +17,7 @@ function reportError(errorReporter) {
 
 export default function mochaTester(errorReporter = 'process') {
   return (file) => {
-    let source = 'src/**/__test__/**/*.js';
+    let source = '**/__test__/**/*.js';
 
     if (file) {
       const parts = file.path.split(path.sep);
