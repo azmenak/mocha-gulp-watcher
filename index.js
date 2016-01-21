@@ -17,24 +17,31 @@ function reportError(errorReporter) {
 
 export default function mochaTester(errorReporter = 'process') {
   return (file) => {
-    let source = '**/__test__/**/*.js';
+    let source = '**/__test__/*spec.js';
 
     if (file) {
-      const parts = file.path.split(path.sep);
-      const filename = parts.pop(1);
-      const dir = parts.join(path.sep);
-
-      if (/\.(json)?$/.test(file.path)) {
-        source = `${dir}/__test__/index*.js`;
-      } else if (!/\.(js)?$/.test(file.path)) {
-        return null;
-      } else if (file.path.indexOf('__test__') !== -1) {
-        source = [
-          file.path,
-          `${dir}/index*.js`
-        ];
+      if (typeof file === 'string') {
+        source = file;
       } else {
-        source = `${dir}/__test__/${filename.split('.')[0]}*.js`;
+        const parts = file.path.split(path.sep);
+        const filename = parts.pop(1);
+        const dir = parts.join(path.sep);
+
+        if (/\.(json)?$/.test(file.path)) {
+          source = `${dir}/__test__/index*.js`;
+        } else if (!/\.(js)?$/.test(file.path)) {
+          return null;
+        } else if (file.path.indexOf('__test__') !== -1) {
+          source = [
+            file.path,
+            `${dir}/index*.js`
+          ];
+        } else {
+          source = [
+            `${dir}/__test__/index*.js`,
+            `${dir}/__test__/${filename.split('.')[0]}*.js`
+          ];
+        }
       }
     }
 
